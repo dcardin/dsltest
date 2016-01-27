@@ -1,0 +1,72 @@
+grammar com.netappsid.configurator.ModelDsl with org.eclipse.xtext.xbase.Xbase
+
+import "http://www.eclipse.org/xtext/common/JavaVMTypes" as types
+import "http://www.eclipse.org/emf/2002/Ecore" as ecore
+
+generate modelDsl "http://www.netappsid.com/configurator/ModelDsl"
+
+Model:
+	importSection=XImportSection?
+	elements+=PackageDeclaration*;
+
+PackageDeclaration:
+	'package' name=QualifiedName '{'
+	elements+=PackageMember*
+	'}';
+
+PackageMember:
+	(PackageDeclaration | Configurable | Enum | DynamicEnum);
+
+Configurable:
+	(abstract?='abstract')? 'configurable' name=ValidID ('extends' superType=JvmTypeReference)?
+	'{'
+		properties+=Property*
+	'}';
+
+Property:
+	type=JvmTypeReference name=ValidID (
+		defaultValue=DefaultValue | 
+		'{'
+			attributes+=Attribute*
+		'}'	
+	)? ;
+
+DefaultValue:
+	'=' defaultValue=XLiteral (unit=ID | unit=STRING)?;
+	
+Attribute:
+	name=ID '=' expression=XLiteral;
+
+Enum:
+	'enum' name=ValidID
+	'{'
+		fields+=EnumField*
+		members+=EnumMember
+	'}';
+
+EnumField:
+	'val' type=JvmTypeReference name=ValidID;
+
+EnumMember:
+	name=ValidID
+	('{'
+		('image' imagePath=STRING)?
+		values+=EnumFieldValue*
+	'}')?;
+
+EnumFieldValue:
+	name=[EnumField] '=' value=XExpression;
+
+DynamicEnum:
+	'dynamicEnum' name=ValidID '{'
+	'resource' tableName=STRING
+	columns+=DynamicEnumColumn+
+	('imageColumn' imageColumn=[DynamicEnumColumn])?
+	'}';
+
+DynamicEnumColumn:
+	'column' name=ValidID '{'
+	'index' columnIndex=INT
+	'label' label=STRING
+	('invisible' | 'filterable')?
+	'}';

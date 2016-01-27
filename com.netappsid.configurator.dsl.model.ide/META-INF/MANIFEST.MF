@@ -1,0 +1,14 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: com.netappsid.configurator.dsl.model.ide
+Bundle-Vendor: My Company
+Bundle-Version: 1.0.0.qualifier
+Bundle-SymbolicName: com.netappsid.configurator.dsl.model.ide; singleton:=true
+Bundle-ActivationPolicy: lazy
+Require-Bundle: com.netappsid.configurator.dsl.model,
+ org.eclipse.xtext.ide,
+ org.eclipse.xtext.xbase.ide
+Bundle-RequiredExecutionEnvironment: JavaSE-1.8
+Export-Package: com.netappsid.configurator.ide.contentassist.antlr.internal,
+ com.netappsid.configurator.ide.contentassist.antlr
+
